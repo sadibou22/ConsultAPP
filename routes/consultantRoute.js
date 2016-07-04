@@ -9,21 +9,28 @@ router.use(function timeLog(req, res, next) {
   next();
 });
 
-// define the consultants route-- get--Afficher la liste des consultants 
+/*  "/consultants"
+ *    GET: finds all Consultants
+ *    POST: creates a new Consultant
+ */
 router.get('/consultants', consulController.getAllConsultants);
 
-// define one consultant route-- get--Afficher un consultant
+router.post('/consultant', consulController.createNewConsultant);
+
+/*  "/upload"
+ *    POST: upload file and save in MongoDB
+ */
+router.post('/upload', consulController.uploadFile);
+
+/*  "/consultants/:id"
+ *    GET: find consultant by id
+ *    PUT: update consultant by id
+ *    DELETE: deletes consultant by id
+ */
 router.get('/consultants/:id', consulController.getConsultant);
 
-// define one consultant route-- get--Edit un consultant
-router.get('/edit/:id', consulController.editByGetConsultant);
-router.post('/edit/:id', consulController.editByPostConsultant);
+router.put('/consultants/:id', consulController.editConsultant);
 
-// define one consultant route-- get--Delete un consultant
-router.get('/delete/:id', consulController.deleteConsultant);
-
-//recherche par nom projet
-router.get('/search', consulController.searchConsultant);
-
+router.delete('/consultants/:id', consulController.deleteConsultant);
 
 module.exports = router;

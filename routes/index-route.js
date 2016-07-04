@@ -8,7 +8,6 @@ router.get('/', function(req, res) {
   //res.render('index', { title: 'Upload File' });
 });
 
-// define the home page route for post
-router.post('/', consulController.uploadFile);
+
 
 module.exports = router;

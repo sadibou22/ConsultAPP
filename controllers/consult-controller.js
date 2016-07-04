@@ -1,5 +1,5 @@
 var fs = require('fs');
-var csv=require('csv2json-convertor');//importing csv2json-
+var csv=require('csv2json-convertor');
 var serviceApp = require('../services/servicesApp.js');
 var serviceModel= require('../models/consultant-model.js');
 var validator = require('validator');
@@ -14,105 +14,111 @@ function handleError(res, reason, message, code) {
 exports.uploadFile = function(req, res){
     var sampleFile;
 
-	if (!req.files) {
-		res.send('No files were uploaded.');
-		//res.render('success', {message:'No files were uploaded'});
-		return;
-	}
- 
-	sampleFile = req.files.sampleFile;
-    var myPath = sampleFile.name;
-	sampleFile.mv(myPath, function(err) {
-		if (err) {
-			res.status(500).send(err);
-		}
-		else {
-			//saveConsultants(myPath); activé after
-			res.send('File uploaded!');
-			//res.render('success', {message:'Upload avec success.....'});    
-		}
-	});
+      if (!req.files) {
+        res.send('No files were uploaded');
+      }
+    
+      sampleFile = req.files.sampleFile;
+        var myPath = sampleFile.name;
+      sampleFile.mv(myPath, function(err) {
+        if (err) {
+          res.status(500).send(err);
+        }
+        else {
+          saveConsultants(myPath); 
+          console.log('File uploaded!');
+          res.redirect('/');  
+        }
+      });
 }
 
 //all consultants
 exports.getAllConsultants = function(req, res) {
     serviceModel.ConsultantModel.find(null)
-	.exec(function(error, consultants){
-		if(error) {
-			res.send('error');
-			//console.log(error);
-		} else {
-			res.json(consultants);
-			//res.render('consultant', { title: 'Liste des consultants',allConsultants:consultants});
-		}
-	});
+    .exec(function(err, consultants){
+      if(err) {
+       handleError(res, err.message, "Failed to get consultants.");
+      } else {
+        res.status(200).json(consultants);  
+      }
+    });
 };
 
 //get un consultant by id--AFFICHE UN CONSULTANT
 exports.getConsultant = function(req, res) {
 	var consulId = req.params.id;
+      serviceModel.ConsultantModel.findById(consulId, function(err, consultant){
+      if(err) {
+        handleError(res, err.message, "Failed to get consultant");
+      } else if(consultant == null) {
+        res.send('Désolé, consultant inexistant'); 
+      } else{
+          res.status(200).json(consultant); 
+      }
+    });
+};
+
+//put un consultant by id--EDIT UN CONSULTANT
+exports.editConsultant = function(req, res) {
+	 var consulId = req.params.id;
     serviceModel.ConsultantModel.findById(consulId, function(err, consultant){
-		if(err) {
-			res.status(500).send('WARNING***quelques chose cloche!');
-		} else if(consultant == null) {
-			res.send('Désolé, consultant inexistant');
-			//res.render('error' ,{message:'Désolé, consultant inexistant'});
-			//res.json(consultant);		
-		} else{
-			res.json(consultant); 
-			//res.render('affiche', { title: 'Consultant', unConsultant:consultant});
-		}
-	});
+        if(err) {
+          res.status(500).send('WARNING***quelques chose cloche!');
+        } else if(consultant == null) {
+          res.status(400).send('Désolé, consultant inexistant');  
+        } else{
+
+          consultant.Prenom = req.body.Prenom;
+          consultant.Nom = req.body.Nom;
+          consultant.Projets = req.body.Projets.toString().split(",");
+          consultant.Competences = req.body.Competences.toString().split(",");
+          consultant.save();
+    
+          res.status(204).end();
+        }
+    });
 };
 
-//Get un consultant by id--EDIT UN CONSULTANT
-exports.editByGetConsultant = function(req, res) {
-	var consulId = req.params.id;
-    serviceModel.ConsultantModel.findById(consulId, function(err, consultant){
-		if(err) {
-			res.status(500).send('WARNING***quelques chose cloche!');
-		} else if(consultant == null) {
-			res.send('Désolé, consultant inexistant');
-			//res.json(consultant);		
-		} else{
-			res.json(consultant); 
-			//res.render('edit', { title: 'Mise a jour consultant', unConsultant:consultant});
-		}
-	});
-};
-//Post un consultant by id--EDIT UN CONSULTANT
-exports.editByPostConsultant = function(req, res) {
-  var consultID = req.params.id;
-  
-  serviceModel.ConsultantModel.findById(consultID, function(err, c){
-    if(err){throw err;}
-    c.Prenom=req.body.prenom;
-    c.Nom=req.body.nom;
-    c.save();
-    //res.redirect('/consultants/:id');
-	//return res.render('affiche', { title: 'Consultant', unConsultant:c});
-	res.json(c);
-  });
-};
-
-
-//get un consultant by id--DELETE UN CONSULTANT
+//delete un consultant by id--DELETE UN CONSULTANT
 exports.deleteConsultant = function(req, res) {
-	var consulId = req.params.id;
-    serviceModel.ConsultantModel.findByIdAndRemove(consulId, function(err, consultant){
-		if(err) {
-			res.status(500).send('WARNING***quelques chose cloche!');
-		} else if(consultant == null) {
-			res.send('Désolé, consultant inexistant');
-			//res.json(consultant);		
-		} else{
-			//res.json(consultant); 
-			//res.render('delete', { title: 'Consultant Supprimé...', unConsultant:consultant});
-			res.send('Consultant supprimé');
+	console.log(req.params.id);
+      var consulId = req.params.id;
+          serviceModel.ConsultantModel.findByIdAndRemove(consulId, function(err, consultant){
+          if(err) {
+            handleError(res, err.message, "Failed to delete consultant");
+          } else if(consultant == null) {
+            res.send('Désolé, consultant inexistant');  
+          } else{
+            console.log('Consultant supprimé');
+            res.status(204).end();
+          }
+        });
+};
+//create un new consultant
+exports.createNewConsultant = function(req, res){
+	var newConsultant = new serviceModel.ConsultantModel();
+	
+	if (!(req.body.prenom || req.body.nom)) {
+		handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
+	}
+		
+	newConsultant._id =  req.body.id
+	newConsultant.Prenom = req.body.prenom;
+	newConsultant.Nom = req.body.nom;	
+	newConsultant.Projets = req.body.projet.split(",");
+	newConsultant.Competences = req.body.competence.split(",");
+
+	newConsultant.save(function(err) {
+		if (err) {
+			handleError(res, err.message, "Failed to create new consultant.");
+			console.log('my err:', err.message);
+		} else {
+			res.status(201).end();
+			console.log('saved'); 
+			
 		}
 	});
 };
-
 
 //Methode search 
 exports.searchConsultant = function(req, res){
@@ -132,13 +138,13 @@ exports.searchConsultant = function(req, res){
 		break;
 		case "projet":getConsultantByProjet(req.query.intputSearch, res);
 		break;
-		//default: res.send('invalide choice..')	
+		
 	}
 
 }
 
 //mes methodes
-exports.saveConsultants = function(filname){ 
+var saveConsultants = function(filname){ 
     //validation fichier avec l'extension
 	var valideExt = serviceApp.verifFileExtension(serviceApp.extensionsValides,filname);
 	console.log(valideExt);
@@ -235,125 +241,3 @@ var saveConsultantCsvInMongo = function(data,j){
 	});
 	
 }
-
-
-/*
-//recherche par projets
-var getConsultantByProjet = function(projetName, c){
-	if(!validator.isAlpha(projetName)){
-		c.render('error' ,{message:'WARNING***quelques chose cloche!'+c.status(500)}); 
-	}else{
-		var regex = new RegExp(["^", String, "$"].join(""), "i");
-		
-		serviceModel.ConsultantModel.find({Projets:{$regex: new RegExp('^' + projetName.toLowerCase(), 'i')}}, function(err, consultants){
-			if(err) {
-				c.status(500).send('WARNING***quelques chose cloche!');
-			} else if(consultants.length == 0) {
-				c.render('error', {message:'Désolé, Consultant inexistant'}); 
-				//res.json(consultant);		
-			} else{
-				//res.json(consultants); 
-				//console.log(consultants); 
-				return c.render('consultant', { title: 'Projet '+ projetName, allConsultants:consultants});
-			}
-		});
-	}//fin else
-}
-
-//recherche par competences
-var getConsultantByCompetences = function(consulComp, c ) {
-
-	if(!validator.isAlpha(consulComp)){
-		//c.render('error' ,{message:'WARNING***quelques chose cloche!'});
-		c.send('WARNING***quelques chose cloche!');
-		
-	}else{
-
-	//var consulComp = req.query.Competences;
-		//select * from consultant where (upper(consultant.competencies)) like '%competencies%'
-		var regex = new RegExp(["^", String, "$"].join(""), "i");
-
-		serviceModel.ConsultantModel.find({'Competences': {$regex: new RegExp('^' + consulComp.toLowerCase(), 'i')}}, function(err, consultants){
-			if(err) {
-				c.render('error' ,{message:'WARNING***quelques chose cloche!'+c.status(500)});
-			} else if(consultants.length ==0) {
-				c.render('error', {message:'Désolé, Consultant inexistant'}); 
-			} else{
-			//res.json(consultant); 
-				c.render('consultant', { title: 'Competences'+ consulComp, allConsultants:consultants});
-			}
-		});
-	}//fin else
-};
-
-//recherche by prenom
-var getConsultantByPrenom = function(prenom, c){
-
-	if(!validator.isAlpha(prenom)){
-		c.render('error' ,{message:'WARNING***quelques chose cloche!'});	
-	}else{
-
-		var regex = new RegExp(["^", String, "$"].join(""), "i");
-
-		serviceModel.ConsultantModel.find({Prenom: {$regex: new RegExp('^' + prenom.toLowerCase(), 'i')}}, function(err, consultants){
-			if(err) {
-				//c.status(500).send('WARNING***quelques chose cloche!');
-				c.render('error' ,{message:'WARNING***quelques chose cloche!'+c.status(500)});	
-			} else if(consultants.length == 0) {
-				c.render('error', {message:'Désolé, Consultant inexistant'}); 
-			} else{
-			//res.json(consultant); 
-				c.render('consultant', { title: 'Prénom '+ prenom, allConsultants:consultants});
-			}
-		});
-	}//fin else
-
-}
-
-//recherche by nom
-var getConsultantByNom = function(nom, c){
-	if(!validator.isAlpha(nom)){
-		c.render('error' ,{message:'WARNING***quelques chose cloche!'});
-	}else{
-
-			var regex = new RegExp(["^", String, "$"].join(""), "i");
-			try {
-				serviceModel.ConsultantModel.find({Nom: {$regex: new RegExp('^' + nom.toLowerCase(), 'i')}}, function(err, consultants){
-					if(err) {
-						c.render('error' ,{message:'WARNING***quelques chose cloche!'+c.status(500)});
-					} else if(consultants.length == 0) {
-						c.render('error', {message:'Désolé, consultant inexistant'}); 
-					} else{
-					//res.json(consultant); 
-						c.render('consultant', { title: 'Nom'+ nom, allConsultants:consultants});
-						//console.log('trouvé');
-					}
-				});
-
-			} catch (err) {
-			// Handle the error here.
-			console.log('hum')
-			}
-	}//fin else
-	
-}
-
-//recherche by ID
-var getConsultantByID = function(consulId, c){
-
-	//var consulId = req.params.id;
-    serviceModel.ConsultantModel.findById(consulId, function(err, consultant){
-		if(err) {
-			c.render('error' ,{message:'WARNING***saisir un numéro employé valide!'});
-		} else if(consultant == null) {
-			c.render('error', {message:'Désolé, consultant inexistant'}); 
-			//res.json(consultant);		
-		} else{
-			//res.json(consultant); 
-			c.render('affiche', { title: 'Consultant ID: '+consulId, unConsultant:consultant});
-		}
-	});
-
-}
-
-*/

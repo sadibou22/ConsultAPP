@@ -16,17 +16,7 @@
   </div>
 </div>
 <div class="container">
- <!-- <table class="table table-hover">
-    <tbody>
-      <tr ng-repeat="consultant in consultants | orderBy:'Prenom'" style="cursor:pointer">
-        <td>
-          <a ng-href="#/consultants/{{consultant._id}}">{{ consultant.Prenom }} {{ consultant.Nom }}</a>
-        </td>
-      </tr>
-    </tbody>
-    <button style="margin-top:20px" class="btn btn-warning" ng-click="toggleEdit()">UploadFile2</button>
-  </table> -->
-
+ 
 <form>
     <div class="form-group">
       <div class="input-group">
@@ -77,9 +67,7 @@
 				<td>{{ consultant.Prenom }}</td>
 				<td>{{ consultant.Nom }}</td>
 				<td>{{ consultant.Competences }}</td>
-				<td ng-repeat="p in consultant.Projets" >
-            <p>{{p}}</p> </br>
-        </td>
+				<td>{{consultant.Projets}}</td>
         <td> <a ng-href="#/consultants/{{consultant._id}}" class="btn btn-success">Afficher</a> </td>
         <td> <a href="#/"><button class="btn btn-danger" ng-click="deleteConsultant(consultant._id)">Supprimer</button></a> </td>
         </tr>

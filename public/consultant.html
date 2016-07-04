@@ -1,14 +1,27 @@
 <div class = "row">
   <div class="col-md-6">
         <h2>
-        {{ consultant.Prenom }} {{ consultant.Nom }}
+          {{ consultant.Prenom }} {{ consultant.Nom }}
         </h2>
 
         <div>
-            
-            <div>Projet: {{ consultant.Projets[0]}} </div>
-            <div>Competence: {{ consultant.Competences[0] }} </div>
-            
+            <h4>Projets:</h4>
+            <div ng-repeat="p in consultant.Projets">
+                {{p}} 
+            </div>
+
+            <h3>Competences:</h3>
+            <div ng-repeat="c in consultant.Competences">
+                {{c}} 
+            </div>
+            <div ng-hide="editMode" class="container">
+              <div>
+                <p>
+                  <button style="margin-top:20px" class="btn btn-warning" ng-click="toggleEdit()">Modifier</button>
+                  <a href="#/"><button style="margin-top:20px" class="btn btn-danger" ng-click="deleteConsultant(consultant._id)">Supprimer</button></a>
+                </p>
+              </div>
+            </div>
         </div>
   
 
@@ -20,19 +33,6 @@
     </div>
     <div class="col-md-1">
     </div>
-</div>
-<div ng-hide="editMode" class="container">
-  <div>
-    <p ng-if="contact.email">projets: <a ng-href="mailto:{{ contact.email }}" target="_blank">{{ consultant.email }}</a></p>
-    <p ng-if="contact.phone.mobile">phone (m): {{ consultant.phone.mobile }} </p>
-    <p ng-if="contact.phone.work">phone (w): {{ consultant.phone.work }} </p>
-    <p ng-if="contact.address"> address: {{ consultant.address }} </p>
-    <p>
-      <button style="margin-top:20px" class="btn btn-warning" ng-click="toggleEdit()">Modifier</button>
-      
-      <a href="#/"><button style="margin-top:20px" class="btn btn-danger" ng-click="deleteConsultant(consultant._id)">Supprimer</button></a>
-    </p>
-  </div>
 </div>
 <!-- Consultant form -->
 <div ng-include="contactFormUrl">
