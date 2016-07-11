@@ -1,0 +1,34 @@
+{
+  "name": "consultantapp",
+  "version": "1.0.0",
+  "description": "Application pour la gestion de consultants",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "bootstrap": "^3.3.6",
+    "csv2json-convertor": "^1.2.0",
+    "express": "^4.14.0",
+    "express-fileupload": "0.0.5",
+    "fs": "0.0.2",
+    "mongoose": "^4.5.3",
+    "morgan": "^1.7.0",
+    "path": "^0.12.7",
+    "url": "^0.11.0",
+    "validator": "^5.4.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sadibou22/ConsultAPP.git"
+  },
+  "author": "Cheikhsadibou.traore@cgi.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sadibou22/ConsultAPP/issues"
+  },
+  "homepage": "https://github.com/sadibou22/ConsultAPP#readme"
+}

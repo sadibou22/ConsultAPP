@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="ConsultantApp">
+<html lang="fr" ng-app="ConsultantApp">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,6 +8,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
     
+    <!-- Custom styles -->
+    <link href="css/style.css" rel="stylesheet">
+   
+
 
     <title>Consultant-APP</title>
     <script type="javascript">
@@ -30,6 +34,10 @@
   <body>
 
     <div class="container">
+      <!-- BANNIERE --
+      <div id="banniere_image">
+          <img src="./images/1banniere_cgi.jpg" > 
+      </div>-->
 
         <!-- Static navbar -->
         <nav class="navbar navbar-default">
@@ -48,7 +56,7 @@
                 <li class="active"><a href="#/">Accueil</a></li>
                 <li><a href="#/consultants">Consultants</a></li>
                 <li><a href="#/uploadFile">Upload File</a></li>
-                
+                <li><a href="#/">Login</a></li>
               </ul>
               
             </div><!--/.nav-collapse -->
@@ -58,7 +66,7 @@
         <div class="jumbotron">
             <h1>Gestion Consultants</h1>
             <p class="lead">Cette application permet la gestion des consultants.</p>
-            <p><a class="btn btn-lg btn-success" ng-href="#/">Essayez le<span class="glyphicon glyphicon-ok"></span></a></p>
+            <p><a class="btn btn-lg btn-danger" ng-href="#/">Essayez le<span class="glyphicon glyphicon-ok"></span></a></p>
         </div>
         <!-- /details partielles vues -->
         <div ng-view></div> 
@@ -110,12 +118,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"­></script>
 
     <script src="https://code.angularjs.org/1.5.6/angular-route.js"­></script>
-    <script src="js/app.js"­></script>
-    <script src="js/services/consultantService.js"></script>
-    <script src="js/services/factoryTest.js"></script>
-    <script src="js/controllers/mainConsultantCtrl.js"></script>
-
-    
-
+    <script src="app/app.js"­></script>
+    <script src="app/services/consultantService.js"></script>
+    <script src="app/controllers/mainConsultantCtrl.js"></script>
   </body>
 </html>

@@ -1,0 +1,44 @@
+<div class="container" style="border:2px ;padding:25px;margin: 25px;">
+    <div class="row">  
+    
+        <div class="col-sm-6">
+            <!-- FORM ============ -->
+        
+            <form name="userForm" ng-submit="saveConsultant(consultant)" novalidate>
+
+                <!-- prenom -->
+                <div class="form-group" ng-class="{ 'has-error' : userForm.prenom.$invalid && !userForm.prenom.$pristine }">
+                    <label>Prenom</label>
+                    <input type="text" name="prenom" class="form-control" ng-model="consultant.Prenom" ng-minlength="2" ng-maxlength="25" required>
+                    <p ng-show="userForm.prenom.$invalid && !userForm.prenom.$pristine" class="help-block">Prenom requis.</p>
+                    <p ng-show="userForm.nom.$error.minlength" class="help-block">Nom trop court min 2 caracteres</p>
+                    <p ng-show="userForm.nom.$error.maxlength" class="help-block">Nom trop long max 25 carateres.</p>
+                </div>
+
+                <!-- nom -->
+                <div class="form-group" ng-class="{ 'has-error' : userForm.nom.$invalid && !userForm.nom.$pristine }">
+                    <label>Nom</label>
+                    <input type="text" name="nom" class="form-control" ng-model="consultant.Nom" ng-minlength="2" ng-maxlength="25" required>
+                    <p ng-show="userForm.prenom.$invalid && !userForm.prenom.$pristine" class="help-block">Nom requis.</p>
+                    <p ng-show="userForm.nom.$error.minlength" class="help-block">Nom trop court min 2 caracteres.</p>
+                    <p ng-show="userForm.nom.$error.maxlength" class="help-block">Nom trop long max 250 carateres.</p>
+                </div>
+                <!-- PROJETS -->
+                <div class="form-group" >
+                    <label>Projets</label> 
+                    <input type="text" name="projet" class="form-control" ng-model="consultant.Projets">   
+                </div>
+                <!-- COMPETENCES -->
+                <div class="form-group" >
+                    <label>Competences</label>
+                    <input type="text" name="competence" class="form-control" ng-model="consultant.Competences">
+                </div>
+        
+                <button type="submit" class="btn btn-warning" ng-disabled="userForm.$invalid">Sauvegarder</button>
+                <!--<button class="btn btn-default" ng-click="back()">Retour</button>-->
+            </form>
+        </div>
+        <div class="col-sm-6">
+        </div>
+    </div>
+</div>
