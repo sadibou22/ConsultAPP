@@ -4,7 +4,7 @@
           {{ consultant.Prenom }} {{ consultant.Nom }}
         </h2>
 
-        <div>
+        <div ng-hide="editMode" class="container">
             <h4 style="color:blue"><u>Projets:</u></h4>
             <div ng-repeat="p in consultant.Projets">
                 {{p}} 
@@ -14,7 +14,7 @@
             <div ng-repeat="c in consultant.Competences">
                 {{c}} 
             </div>
-            <div ng-hide="editMode" class="container">
+            <div >
               <div>
                 <p>
                   <button style="margin-top:20px" class="btn btn-warning" ng-click="toggleEdit()">Modifier</button>
