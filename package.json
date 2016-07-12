@@ -21,10 +21,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
-  "repository": {
+  /*"repository": {
     "type": "git",
     "url": "git+https://github.com/sadibou22/ConsultAPP.git"
-  },
+  },*/
   "author": "Cheikhsadibou.traore@cgi.com",
   "license": "ISC",
   "bugs": {
