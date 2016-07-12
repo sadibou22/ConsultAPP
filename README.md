@@ -7,4 +7,4 @@ Cette API a pour but de charger via un fichier cSv les inforomations des consult
 •	Sauvegarder un nouveau consultant;
 •	Charger le fichier csv et enregistrer des données.
 •	Authentification Utilisateur--en ebauche
-•	Autorisation --en ebauche
+•	Autorisation --en ebauches
